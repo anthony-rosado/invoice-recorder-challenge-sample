@@ -6,7 +6,7 @@ use App\Http\Controllers\Vouchers\Voucher\DeleteVoucherHandler;
 use App\Http\Controllers\Vouchers\Voucher\GetVoucherHandler;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('vouchers')->group(
+Route::prefix('vouchers')->middleware(['jwt.verify'])->group(
     function () {
         Route::get('/', GetVouchersHandler::class);
         Route::post('/', StoreVouchersHandler::class);
