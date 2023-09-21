@@ -45,6 +45,12 @@ class VoucherService
         $receiverDocumentType = (string) $xml->xpath('//cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID/@schemeID')[0];
         $receiverDocumentNumber = (string) $xml->xpath('//cac:AccountingCustomerParty/cac:Party/cac:PartyIdentification/cbc:ID')[0];
 
+        // Extrae la información de serie, número, tipo de comprobante y moneda del XML
+        $serie = (string) $xml->xpath('//cbc:Serie')[0];
+        $numero = (string) $xml->xpath('//cbc:Numero')[0];
+        $tipoComprobante = (string) $xml->xpath('//cbc:InvoiceTypeCode')[0];
+        $moneda = (string) $xml->xpath('//cbc:DocumentCurrencyCode')[0];
+
         $totalAmount = (string) $xml->xpath('//cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount')[0];
 
         $voucher = new Voucher([
@@ -55,6 +61,10 @@ class VoucherService
             'receiver_document_type' => $receiverDocumentType,
             'receiver_document_number' => $receiverDocumentNumber,
             'total_amount' => $totalAmount,
+            'serie' => $serie, // Agregar serie
+            'numero' => $numero, // Agregar número
+            'tipo_comprobante' => $tipoComprobante, // Agregar tipo de comprobante
+            'moneda' => $moneda, // Agregar moneda
             'xml_content' => $xmlContent,
             'user_id' => $user->id,
         ]);
