@@ -31,6 +31,12 @@ php artisan migrate
 
 -   Consulta la API en http://localhost:8090/api/v1
 
+## Información inicial
+
+Puedes encontrar información inicial para popular la DB en el siguiente enlace:
+
+[Datos iniciales](https://drive.google.com/drive/folders/103WGuWMLSkuHCD9142ubzyXPbJn77ZVO?usp=sharing)
+
 ## Nuevas funcionalidades
 
 ### 1. Registro de serie, número, tipo del comprobante y moneda
