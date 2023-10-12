@@ -8,28 +8,28 @@ La API utiliza Json Web Token para la autenticación.
 
 ## Detalles de la API
 
-- Usa PHP 8.1
-- Usa una base de datos en MySQL
-- Puede enviar correos
+-   Usa PHP 8.1
+-   Usa una base de datos en MySQL
+-   Puede enviar correos
 
 ## Inicia el proyecto con docker
 
-- Clona el archivo `.env.example` a `.env`
-- Reemplaza las credenciales de correo por las tuyas (puedes obtener unas con gmail siguiendo [esta guía](https://programacionymas.com/blog/como-enviar-mails-correos-desde-laravel#:~:text=Para%20dar%20la%20orden%20a,su%20orden%20ha%20sido%20enviada.))
-- En una terminal ejecuta:
+-   Clona el archivo `.env.example` a `.env`
+-   Reemplaza las credenciales de correo por las tuyas (puedes obtener unas con gmail siguiendo [esta guía](https://programacionymas.com/blog/como-enviar-mails-correos-desde-laravel#:~:text=Para%20dar%20la%20orden%20a,su%20orden%20ha%20sido%20enviada.))
+-   En una terminal ejecuta:
 
 ```
 docker-compose up
 ```
 
-- En otra terminal, ingresa al contenedor web y ejecuta:
+-   En otra terminal, ingresa al contenedor web y ejecuta:
 
 ```
 composer install --ignore-platform-reqs
 php artisan migrate
 ```
 
-- Consulta la API en http://localhost:8090/api/v1
+-   Consulta la API en http://localhost:8090/api/v1
 
 ## Nuevas funcionalidades
 
@@ -41,8 +41,9 @@ Se desea poder registrar la serie, número, tipo de comprobante y moneda. Para c
 
 Actualmente el registro de comprobantes se realiza en primer plano, se desea que se realice en segundo plano.
 Además, en lugar de enviar una notificación por correo para informar subida de comprobantes, ahora deberá enviar dos listados de comprobantes:
-- Los que se subieron correctamente
-- Los que no pudieron registrarse (y la razón)
+
+-   Los que se subieron correctamente
+-   Los que no pudieron registrarse (y la razón)
 
 ### 3. Endpoint de montos totales
 
@@ -60,7 +61,7 @@ Se necesita poder filtrar en el endpoint de listado por serie, número y por un 
 
 ## Consideraciones
 
-- Se valorará el uso de código limpio, estándares, endpoints optimizados, tolerancia a fallos y concurrencia.
+-   Se valorará el uso de código limpio, estándares, endpoints optimizados, tolerancia a fallos y concurrencia.
 
 ## Envío del reto
 
