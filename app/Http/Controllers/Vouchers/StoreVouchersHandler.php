@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Vouchers;
 
 use App\Http\Resources\Vouchers\VoucherResource;
+use App\Jobs\ProcessStoreVouchersFromXmlContents;
 use App\Services\VoucherService;
 use Exception;
 use Illuminate\Http\Request;
@@ -29,10 +30,11 @@ class StoreVouchersHandler
             }
 
             $user = auth()->user();
-            $vouchers = $this->voucherService->storeVouchersFromXmlContents($xmlContents, $user);
+
+            ProcessStoreVouchersFromXmlContents::dispatch($xmlContents, $user);
 
             return response([
-                'data' => VoucherResource::collection($vouchers),
+                'message' => 'Se estan procesando los comprobantes, recibira un correo con el resumen.',
             ], 201);
         } catch (Exception $exception) {
             return response([
