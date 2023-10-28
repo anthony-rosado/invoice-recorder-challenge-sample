@@ -55,8 +55,6 @@ class VoucherService
         // Separar la serie y el número
         [$voucher_series, $voucher_number] = explode('-', $voucher_unique_identifier);
 
-        error_log($voucher_currency);
-
         $voucher = new Voucher([
             'voucher_series' => $voucher_series,
             'voucher_number' => $voucher_number,
