@@ -19,6 +19,11 @@ class GetVouchersHandler
         $vouchers = $this->voucherService->getVouchers(
             $request->query('page'),
             $request->query('paginate'),
+            // nuevos campos
+            $request->query('start_date'),
+            $request->query('end_date'),
+            $request->query('number'),
+            $request->query('series'),
         );
 
         return response([
