@@ -10,5 +10,6 @@ Route::prefix('vouchers')->group(
     function () {
         Route::get('/', GetVouchersHandler::class);
         Route::post('/', StoreVouchersHandler::class);
+        Route::get('/total_amount', [GetVouchersHandler::class, 'getVouchersTotalAmount']);
     }
 );
