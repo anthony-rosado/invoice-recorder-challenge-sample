@@ -6,14 +6,38 @@ use App\Events\Vouchers\VouchersCreated;
 use App\Models\User;
 use App\Models\Voucher;
 use App\Models\VoucherLine;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use SimpleXMLElement;
 
 class VoucherService
 {
-    public function getVouchers(int $page, int $paginate): LengthAwarePaginator
+    public function getVouchers(int $page, int $paginate, $start_date, $end_date, $number, $series): LengthAwarePaginator
     {
-        return Voucher::with(['lines', 'user'])->paginate(perPage: $paginate, page: $page);
+        // Obtén el usuario actual
+        $user = auth()->user();
+        //INFO Undefined method 'vouchers'. 
+        // se quita cuando se usa $user = JWTAuth::user();
+        // de todas maneras funciona
+        $vouchers = $user->vouchers();
+
+        // Aplica los filtros adicionales
+        if ($start_date && $end_date) {
+            // Analiza las fechas en formato ISO 8601
+            $start_date = Carbon::parse($start_date);
+            $end_date = Carbon::parse($end_date);
+            $vouchers->whereBetween('created_at', [$start_date, $end_date]);
+        }
+
+        if ($number) {
+            $vouchers->where('voucher_number', $number);
+        }
+
+        if ($series) {
+            $vouchers->where('voucher_series', $series);
+        }
+
+        return $vouchers->with(['lines', 'user'])->paginate(perPage: $paginate, page: $page);
     }
 
     /**

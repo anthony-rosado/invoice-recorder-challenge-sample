@@ -18,7 +18,12 @@ class VoucherResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+
             'id' => $this->resource->id,
+            'voucher_series'  => $this->resource->voucher_series,
+            'voucher_number'  => $this->resource->voucher_number,
+            'voucher_type'  => $this->resource->voucher_type,
+            'currency'  => $this->resource->currency,
             'issuer_name' => $this->resource->issuer_name,
             'issuer_document_type' => $this->resource->issuer_document_type,
             'issuer_document_number' => $this->resource->issuer_document_number,

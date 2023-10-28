@@ -11,6 +11,10 @@ class GetVouchersRequest extends FormRequest
         return [
             'page' => ['required', 'int', 'gt:0'],
             'paginate' => ['required', 'int', 'gt:0'],
+            'start_date' => ['date_format:Y-m-d\TH:i:sP', 'before_or_equal:end_date'],
+            'end_date' => ['date_format:Y-m-d\TH:i:sP', 'after_or_equal:start_date'],
+            'series' => ['string'],
+            'number' => ['string']
         ];
     }
 }
