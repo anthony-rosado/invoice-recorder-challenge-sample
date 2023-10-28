@@ -47,7 +47,21 @@ class VoucherService
 
         $totalAmount = (string) $xml->xpath('//cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount')[0];
 
+        // Extreaer información extra
+        $voucher_unique_identifier = (string) $xml->xpath('//cbc:ID')[0];
+        $voucher_currency = (string) $xml->xpath('//cbc:DocumentCurrencyCode')[0];
+        $voucher_type = (string) $xml->xpath('//cbc:InvoiceTypeCode')[0];
+
+        // Separar la serie y el número
+        [$voucher_series, $voucher_number] = explode('-', $voucher_unique_identifier);
+
+        error_log($voucher_currency);
+
         $voucher = new Voucher([
+            'voucher_series' => $voucher_series,
+            'voucher_number' => $voucher_number,
+            'currency' => $voucher_currency,
+            'voucher_type' => $voucher_type,
             'issuer_name' => $issuerName,
             'issuer_document_type' => $issuerDocumentType,
             'issuer_document_number' => $issuerDocumentNumber,
