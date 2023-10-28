@@ -21,18 +21,18 @@ class VoucherService
         // de todas maneras funciona
         $vouchers = $user->vouchers();
 
-        // Aplica los filtros adicionales
+        // Se aplican los filtros adicionales
         if ($start_date && $end_date) {
-            // Analiza las fechas en formato ISO 8601
+            // Se aanaliza las fechas en formato ISO 8601
             $start_date = Carbon::parse($start_date);
             $end_date = Carbon::parse($end_date);
             $vouchers->whereBetween('created_at', [$start_date, $end_date]);
         }
-
+        // voucher_number
         if ($number) {
             $vouchers->where('voucher_number', $number);
         }
-
+        // voucher_series
         if ($series) {
             $vouchers->where('voucher_series', $series);
         }

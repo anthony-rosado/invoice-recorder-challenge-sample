@@ -18,8 +18,8 @@ class VoucherResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-
             'id' => $this->resource->id,
+            // se agregaron los nuevos campos a la devolucion 
             'voucher_series'  => $this->resource->voucher_series,
             'voucher_number'  => $this->resource->voucher_number,
             'voucher_type'  => $this->resource->voucher_type,
