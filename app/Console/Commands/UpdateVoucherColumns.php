@@ -53,9 +53,8 @@ class UpdateVoucherColumns extends Command
 
                 // Guardar los vouchers
                 $voucher->save();
-
-                $this->info('Campos actualizados en los registros de vouchers.');
             }
+            $this->info('Campos actualizados en los registros de vouchers.');
         } catch (Exception $exception) {
             // Manejar la excepción
             $this->error('Ocurrió un error al procesar los vouchers: ' . $exception->getMessage());
