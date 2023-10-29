@@ -6,29 +6,65 @@ use App\Events\Vouchers\VouchersCreated;
 use App\Models\User;
 use App\Models\Voucher;
 use App\Models\VoucherLine;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Log;
 use SimpleXMLElement;
 
 class VoucherService
 {
-    public function getVouchers(int $page, int $paginate): LengthAwarePaginator
+    public function getVouchers(int $page, int $paginate, $startDate, $endDate, $number, $series): LengthAwarePaginator
     {
-        return Voucher::with(['lines', 'user'])->paginate(perPage: $paginate, page: $page);
+        // Obtén el usuario actual
+        $user = auth()->user();
+        //INFO Undefined method 'vouchers'. 
+        // se quita cuando se usa $user = JWTAuth::user();
+        // de todas maneras funciona
+        $vouchers = $user->vouchers();
+
+        // Se aplican los filtros adicionales
+        if ($startDate && $endDate) {
+            // Se aanaliza las fechas en formato ISO 8601
+            $startDateFormat = Carbon::parse($startDate);
+            $endDateFormat = Carbon::parse($endDate);
+            $vouchers->whereBetween('created_at', [$startDateFormat, $endDateFormat]);
+        }
+        // voucher_number
+        if ($number) {
+            $vouchers->where('voucher_number', $number);
+        }
+        // voucher_series
+        if ($series) {
+            $vouchers->where('voucher_series', $series);
+        }
+
+        return $vouchers->with(['lines', 'user'])->paginate(perPage: $paginate, page: $page);
     }
 
     /**
-     * @param string[] $xmlContents
+     * @param string[] $xmlFiles
      * @param User $user
      * @return Voucher[]
      */
-    public function storeVouchersFromXmlContents(array $xmlContents, User $user): array
+    public function storeVouchersFromXmlContents(array $xmlFiles, User $user): array
     {
         $vouchers = [];
-        foreach ($xmlContents as $xmlContent) {
-            $vouchers[] = $this->storeVoucherFromXmlContent($xmlContent, $user);
+        $errors = [];
+
+        foreach ($xmlFiles as $xmlFile) {
+            try {
+                $vouchers[] = $this->storeVoucherFromXmlContent($xmlFile['xmlContents'], $user);
+            } catch (Exception $exception) {
+                $errors[] = [
+                    'errorReason' => 'El comprobante no se ha podido analizar como un XML.',
+                    'fileName' => $xmlFile['fileName'],
+                    'error' => $exception->getMessage()
+                ];
+            }
         }
 
-        VouchersCreated::dispatch($vouchers, $user);
+        VouchersCreated::dispatch($vouchers, $user, $errors);
 
         return $vouchers;
     }
@@ -47,7 +83,19 @@ class VoucherService
 
         $totalAmount = (string) $xml->xpath('//cac:LegalMonetaryTotal/cbc:TaxInclusiveAmount')[0];
 
+        // Extreaer información extra
+        $voucherUniqueIdentifier = (string) $xml->xpath('//cbc:ID')[0];
+        $voucherCurrency = (string) $xml->xpath('//cbc:DocumentCurrencyCode')[0];
+        $voucherType = (string) $xml->xpath('//cbc:InvoiceTypeCode')[0];
+
+        // Separar la serie y el número
+        [$voucherSeries, $voucherNumber] = explode('-', $voucherUniqueIdentifier);
+
         $voucher = new Voucher([
+            'voucher_series' => $voucherSeries,
+            'voucher_number' => $voucherNumber,
+            'currency' => $voucherCurrency,
+            'voucher_type' => $voucherType,
             'issuer_name' => $issuerName,
             'issuer_document_type' => $issuerDocumentType,
             'issuer_document_number' => $issuerDocumentNumber,

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Vouchers;
 
+use App\Http\Requests\Vouchers\StoreVouchersRequest;
 use App\Http\Resources\Vouchers\VoucherResource;
+use App\Jobs\ProcessStoreVouchersFromXmlContents;
 use App\Services\VoucherService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class StoreVouchersHandler
 {
@@ -14,25 +17,32 @@ class StoreVouchersHandler
     {
     }
 
-    public function __invoke(Request $request): Response
+    public function __invoke(StoreVouchersRequest $request): Response
     {
-        try {
-            $xmlFiles = $request->file('files');
 
-            if (!is_array($xmlFiles)) {
-                $xmlFiles = [$xmlFiles];
+        try {
+            $files = $request->file('files');
+
+            if (!is_array($files)) {
+                $files = [$files];
             }
 
-            $xmlContents = [];
-            foreach ($xmlFiles as $xmlFile) {
-                $xmlContents[] = file_get_contents($xmlFile->getRealPath());
+            $xmlFiles = [];
+            foreach ($files as $file) {
+                $xmlFile = [
+                    'xmlContents' => file_get_contents($file->getRealPath()),
+                    'fileName' => $file->getClientOriginalName(),
+                ];
+
+                $xmlFiles[] = $xmlFile;
             }
 
             $user = auth()->user();
-            $vouchers = $this->voucherService->storeVouchersFromXmlContents($xmlContents, $user);
+
+            ProcessStoreVouchersFromXmlContents::dispatch($xmlFiles, $user);
 
             return response([
-                'data' => VoucherResource::collection($vouchers),
+                'message' => 'Hemos recibido tus comprobantes y estamos procesándolos. Pronto recibirás un correo de confirmación con los resultados.',
             ], 201);
         } catch (Exception $exception) {
             return response([

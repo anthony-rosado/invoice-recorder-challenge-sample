@@ -19,6 +19,11 @@ class VoucherResource extends JsonResource
     {
         return [
             'id' => $this->resource->id,
+            // se agregaron los nuevos campos a la devolucion 
+            'voucher_series'  => $this->resource->voucher_series,
+            'voucher_number'  => $this->resource->voucher_number,
+            'voucher_type'  => $this->resource->voucher_type,
+            'currency'  => $this->resource->currency,
             'issuer_name' => $this->resource->issuer_name,
             'issuer_document_type' => $this->resource->issuer_document_type,
             'issuer_document_number' => $this->resource->issuer_document_number,
