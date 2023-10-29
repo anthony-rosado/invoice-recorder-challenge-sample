@@ -18,6 +18,7 @@
         <li>Nombre del Receptor: {{ $comprobante->receiver_name }}</li>
         <li>Tipo de Documento del Receptor: {{ $comprobante->receiver_document_type }}</li>
         <li>Número de Documento del Receptor: {{ $comprobante->receiver_document_number }}</li>
+        <li>Moneda: {{ $comprobante->currency }}</li>
         <li>Monto Total: {{ $comprobante->total_amount }}</li>
     </ul>
     @endforeach
