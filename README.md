@@ -76,3 +76,79 @@ Deberás enviar el reto a través de una Pull Request a este repositorio. Puedes
 ## ¿Tienes alguna duda?
 
 Puedes enviar un correo a `ignacioruedaboada@gmail.com` o a `anthony.rosado747@gmail.com` enviando tus consultas y se te responderá a la brevedad.
+
+
+## Funcionalidades completadas
+
+### 1. Registro de serie, número, tipo del comprobante y moneda
+
+Se implementó una migración adicional con el fin de incorporar los campos nuevos. Además, se desarrolló un comando para regularizar los archivos que preexistían antes de esta actualización.
+
+Regularizar los comprobantes:
+
+```
+php artisan voucher:update-columns
+```
+
+### 2. Carga de comprobantes en segundo plano
+
+Se agrego un job para el proceso en segundo plano.
+
+Preparar la base de datos para los jobs:
+
+```
+php artisan queue:table
+```
+```
+php artisan queue:failed-table
+```
+
+Ejecutar las tareas en segundo plano:
+
+```
+php artisan queue:work
+```
+
+Una vez finalizadas las tareas, se genera un único correo electrónico de notificación que incluye un resumen de los comprobantes procesados con éxito, así como de aquellos que no pudieron registrarse, junto con una explicación de la razón detrás de este último caso.
+
+### 3. Endpoint de montos totales
+
+Se implementó un nuevo endpoint, el cual proporciona el monto total por tipo de moneda, únicamente con los comprobantes que le pertenecen al usuario.
+
+Ejemplo de uso:
+
+```
+http://localhost:8090/api/v1/vouchers/total_amount
+```
+
+### 4. Eliminación de comprobantes
+
+Se implementó un nuevo endpoint con el método DELETE para la eliminación de comprobantes por ID, únicamente si el comprobante pertenece al usuario
+
+Ejemplo de uso:
+
+```
+http://localhost:8090/api/v1/vouchers/{id}
+```
+
+### 5. Filtro en listado de comprobantes
+
+Se modifico el endpoint que devolvia los comprobantes para que pueda recibir más parametros y pueda hacer un filtrado más preciso, únicamente con los comprobantes que le pertenecen al usuario.
+
+- page : Número de página.
+- paginate: Cantidad de registros por página.
+- numero: Número de comprobante. (_Campo opcional_)
+- series: Serie de comprobante. (_Campo opcional_)
+
+Además, se ha incorporado la capacidad de especificar un rango de fechas utilizando el formato _ISO-8601_, por ejemplo, "2023-10-29T15:56:00-05:00", a través de los siguientes parámetros:
+
+- start_date: Fecha de inicio. (_Campo opcional_)
+- end_date: Fecha de finalización. (_Campo opcional_)
+
+Ejemplo de uso:
+
+```
+http://localhost:8090/api/v1/vouchers?page=1&paginate=10&series=FFF1&numero=3625&start_date=2023-10-27T15:56:00-05:00&end_date=2023-10-29T15:56:00-05:00
+```
+
+Esto permite una búsqueda más detallada y precisa de los comprobantes deseados.
