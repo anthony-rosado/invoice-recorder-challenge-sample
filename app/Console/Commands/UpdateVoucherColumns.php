@@ -36,19 +36,20 @@ class UpdateVoucherColumns extends Command
                 // Procesa el XML y extrae los datos para llenar los nuevos campos
                 $xml = new SimpleXMLElement($voucher->xml_content);
 
-                // Extreaer información
-                $voucher_unique_identifier = (string) $xml->xpath('//cbc:ID')[0];
-                $voucher_currency = (string) $xml->xpath('//cbc:DocumentCurrencyCode')[0];
-                $voucher_type = (string) $xml->xpath('//cbc:InvoiceTypeCode')[0];
+
+                // Extreaer información extra
+                $voucherUniqueIdentifier = (string) $xml->xpath('//cbc:ID')[0];
+                $voucherCurrency = (string) $xml->xpath('//cbc:DocumentCurrencyCode')[0];
+                $voucherType = (string) $xml->xpath('//cbc:InvoiceTypeCode')[0];
 
                 // Separar la serie y el número
-                [$voucher_series, $voucher_number] = explode('-', $voucher_unique_identifier);
+                [$voucherSeries, $voucherNumber] = explode('-', $voucherUniqueIdentifier);
 
                 // Actualizar campos
-                $voucher->voucher_series = $voucher_series; // F###
-                $voucher->voucher_number = $voucher_number;  // NNNN
-                $voucher->currency = $voucher_currency;
-                $voucher->voucher_type = $voucher_type;
+                $voucher->voucher_series = $voucherSeries; // F###
+                $voucher->voucher_number = $voucherNumber;  // NNNN
+                $voucher->currency = $voucherCurrency;
+                $voucher->voucher_type = $voucherType;
 
                 // Guardar los vouchers
                 $voucher->save();
