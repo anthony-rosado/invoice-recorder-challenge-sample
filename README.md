@@ -152,3 +152,15 @@ http://localhost:8090/api/v1/vouchers?page=1&paginate=10&series=FFF1&numero=3625
 ```
 
 Esto permite una búsqueda más detallada y precisa de los comprobantes deseados.
+
+
+## Experiencia con el Challenge
+
+En este proyecto, enfrenté varios desafíos y obtuve valiosos aprendizajes. A continuación, comparto algunos aspectos clave de mi experiencia:
+
+- **Aprendizajes:** Durante este reto, aprendí Jobs, Queues, Constructor Property Promotion, Dependency Injection, Generating Commands y más.
+
+- **Dificultades:** Uno de los desafíos más significativos fue la carga de comprobantes en segundo plano, junto con la necesidad de notificar el estado de procesamiento de cada uno, un concepto completamente nuevo para mí. Sin embargo, superé este obstáculo mediante investigaciones y la consulta de recursos educativos en forma de videos.
+
+
+
